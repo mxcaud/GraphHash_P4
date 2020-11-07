@@ -1,0 +1,26 @@
+Asparagus
+Broccoli
+Corn
+Daikon
+Edamame
+Fennel
+Ginger
+Horseradish
+Ice plant
+Jicama
+Kale
+Lettuce
+Mushroom
+Nettle
+Onion
+Potato
+Quinoa
+Radish
+Squash
+Turnip
+Ulluco
+Velvet Bean
+Watercress
+[NONE]
+Yam
+Zucchini
