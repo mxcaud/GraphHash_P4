@@ -39,6 +39,8 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		//         ClassWithGeneric<V>[] items = (ClassWithGeneric<V>[]) new Object[10];
 		//instead, use this format:
 		//         ClassWithGeneric<V>[] items = (ClassWithGeneric<V>[]) new ClassWithGeneric[10];
+		storage = (Node<K,V>[]) new Node[size];
+		originalSize = size;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -62,7 +64,7 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	public int size() {
 		//return the number of elements in the table
 		//O(1)
-		return -1;
+		return numElements;
 	}
 
 	public V get(Object key) {
@@ -136,6 +138,13 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		//is the number of slots, and NOT O(n+m)
 
 		return null;
+	}
+
+	private int absVal(int absNum){
+		int abs;
+		if (absNum < 0) abs = -absNum;
+		else abs = absNum;
+		return abs;
 	}
 
 	//--------------------------------------------------------
