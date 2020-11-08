@@ -6,9 +6,7 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 import org.apache.commons.collections15.Factory;
 
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Collection;
 
 //You may use your hash map and hash set if you'd like
@@ -20,8 +18,7 @@ import java.util.Collection;
 //Uncomment the following lines if you want to use the java.util version
 //import java.util.HashMap; //or use ThreeTenHashMap!
 //import java.util.HashSet; //or use ThreeTenHashSet!
-	
-import java.util.NoSuchElementException;
+
 
 class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphComponent>
 	implements Graph<V, E>, UndirectedGraph<V, E> {
@@ -31,36 +28,40 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	//********************************************************************************
 	
 	//**************** IMPORTANT WARNING ****************
-	//Due to Java complexities with bounded genics that it would be difficult to explain here,
+	//Due to Java complexities with bounded generics that it would be difficult to explain here,
 	//if you want an array of V[] or E[], the following format ___SHOULD NOT___ be used:
 	//         V[] items = (V[]) new Object[10];
 	//instead, use this format:
 	//         V[] items = (V[]) new ThreeTenGraphComponent[10];
-	private ArrayList<V> vertices;
+	private ArrayList<V> verti;
 	private ArrayList<ArrayList<E>> edge;
 	private ArrayList<Integer[]> edgeCord;
-	private ArrayList<E> edgeAtCord;
-	private int matrixSize = 10;
-	private int numV = 0;
+	private ArrayList<E> edgeC;
+
+	private int vertCount = 0;
+	private int sizeOfGraph = 1; //can assume graphs will be >1
+
 
 	/**
 	 * Creates a new graph. Initializing all appropriate instance variables.
 	 */
 	@SuppressWarnings("unchecked")
 	public ThreeTenGraph() {
-		vertices = new ArrayList<V>();
-		edge = new ArrayList<ArrayList<E>>();
-		edgeAtCord = new ArrayList<E>();
-		for(int i = 0; i < matrixSize; i++){
-			ArrayList<E> column = new ArrayList<E>();
+		verti = new ArrayList<>();
+		edge = new ArrayList<>();
+		edgeC = new ArrayList<>();
+
+		for(int i = 0; i < sizeOfGraph; i++){
+			ArrayList<E> graph;
+			graph = new ArrayList<>();
 			int count = 0;
-			while(count < matrixSize){
-				column.add(null);
+			while (count < sizeOfGraph) {
+				graph.add(null);
 				count++;
 			}
-			edge.add(column);
+			edge.add(graph);
 		}
-		edgeCord = new ArrayList<Integer[]>();
+		edgeCord = new ArrayList<>();
 	}
 	
 	/**
@@ -70,11 +71,12 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @return a Collection view of all edges in this graph
 	 */
 	public Collection<E> getEdges() {
-		ArrayList<E> returnThis = new ArrayList<E>();
-		for(int i = 0; i < edgeAtCord.size(); i++){
-			returnThis.add(edgeAtCord.get(i));
+		ArrayList<E> returnEdges = new ArrayList<>();
+
+		for (E edges : edgeC) {
+			returnEdges.add(edges);
 		}
-		return returnThis;
+		return returnEdges;
 	}
 	
 	/**
@@ -84,7 +86,7 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @return a Collection view of all vertices in this graph
 	 */
 	public Collection<V> getVertices() {
-		return vertices;
+		return verti;
 	}
 	
 	/**
@@ -93,11 +95,11 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 */
 	public int getEdgeCount() {
 		int count  = 0;
-		for(int i = 0; i < numV; i++){
-			for(int j = 0; j < numV; j++){
-				if(edge.get(i).get(j) != null){
-					count++;
-				}
+		for(int i = 0; i < vertCount; i++){
+			int j = 0;
+			while (j < vertCount) {
+				if(edge.get(i).get(j) != null) count++;
+				j++;
 			}
 		}
 		return count;
@@ -108,7 +110,7 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @return the number of vertices in this graph
 	 */
 	public int getVertexCount() {
-		return vertices.size();
+		return verti.size();
 	}
 	
 	/**
@@ -123,21 +125,23 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * or null if edge is not present
 	 */
 	public Collection<V> getIncidentVertices(E edge) {
-		if(edge == null || !(edgeAtCord.contains(edge))){
-			return null;
-		}
-		ArrayList<V> returnThis = new ArrayList<V>();
-		for(int i = 0; i < edgeCord.size();i++){
-			int x = edgeCord.get(i)[0];
-			int y = edgeCord.get(i)[1];
-			if(this.edge.get(x).get(y) != null){
-				if(this.edge.get(x).get(y).equals(edge)){
-					returnThis.add(vertices.get(x));
-					returnThis.add(vertices.get(y));
+		if (edge != null && edgeC.contains(edge)) {
+			ArrayList<V> vertCol = new ArrayList<>();
+
+			for (Integer[] integers : edgeCord) {
+				int a = integers[0];
+				int b = integers[1];
+				if (this.edge.get(a).get(b) != null) {
+					if (this.edge.get(a).get(b).equals(edge)) {
+						vertCol.add(verti.get(a));
+						vertCol.add(verti.get(b));
+					}
 				}
 			}
+			return vertCol;
+		} else {
+			return null;
 		}
-		return returnThis;
 	}
 
 	/**
@@ -151,24 +155,28 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * or null if vertex is not present
 	 */
 	public Collection<V> getNeighbors(V vertex) {
-		if(vertex == null){
+		if (vertex != null) {
+			int index = verti.indexOf(vertex);
+			if (index == -1) {
+				return null;
+			}
+			ArrayList<V> colVert = new ArrayList<>();
+			int i = 0;
+			while (i < vertCount) {
+				if (edge.get(index).get(i) != null) {
+					colVert.add(verti.get(i));
+					i++;
+					continue;
+				}
+				if (edge.get(i).get(index) != null) {
+					colVert.add(verti.get(i));
+				}
+				i++;
+			}
+			return colVert;
+		} else {
 			return null;
 		}
-		int index = vertices.indexOf(vertex);
-		if(index == -1){
-			return null;
-		}
-		ArrayList<V> returnThis = new ArrayList<V>();
-		for(int i = 0; i < numV; i++){
-			if(edge.get(index).get(i) != null){
-				returnThis.add(vertices.get(i));
-				continue;
-			}
-			if(edge.get(i).get(index) != null){
-				returnThis.add(vertices.get(i));
-			}
-		}
-		return returnThis;
 
 
 	}
@@ -181,26 +189,28 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * or null if vertex is not present
 	 */
 	public Collection<E> getIncidentEdges(V vertex) {
-		if(vertex == null){
+		if(vertex == null) return null;
+		int position = verti.indexOf(vertex);
+
+		if(position == -1){
 			return null;
 		}
-		int index = vertices.indexOf(vertex);
-		if(index == -1){
-			return null;
-		}
-		ArrayList<E> returnThis = new ArrayList<E>();
-		for(int i = 0; i < numV; i++){
-			if(edge.get(index).get(i) != null){
-				returnThis.add(edge.get(index).get(i));
+		ArrayList<E> colVert = new ArrayList<>();
+		int i = 0;
+		while (i < vertCount) {
+			if(edge.get(position).get(i) != null){
+				colVert.add(edge.get(position).get(i));
 			}
-			if(i == index){
+			if(i == position){
+				i++;
 				continue;
 			}
-			if(edge.get(i).get(index) != null){
-				returnThis.add(edge.get(i).get(index));
+			if(edge.get(i).get(position) != null){
+				colVert.add(edge.get(i).get(position));
 			}
+			i++;
 		}
-		return returnThis;
+		return colVert;
 	}
 	
 	/**
@@ -223,17 +233,14 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * 
 	 * @return  an edge that connects v1 to v2, 
 	 * or null if no such edge exists (or either vertex is not present)
-	 * @see Hypergraph#findEdgeSet(Object, Object) 
 	 */
 	public E findEdge(V v1, V v2) {
-		int fromIndex = vertices.indexOf(v1);
-		int toIndex = vertices.indexOf(v2);
-		if(fromIndex == -1 || toIndex == -1){
+		int gSource = verti.indexOf(v1);
+		int gDest = verti.indexOf(v2);
+		if(gSource == -1 || gDest == -1){
 			return null;
 		}
-		if(edge.get(fromIndex).get(toIndex) != null){
-			return edge.get(fromIndex).get(toIndex);
-		}
+		if(edge.get(gSource).get(gDest) != null) return edge.get(gSource).get(gDest);
 
 		return null;
 	}
@@ -254,32 +261,24 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @param v1 the first vertex to be connected
 	 * @param v2 the second vertex to be connected
 	 * @return true if the add is successful, false otherwise
-	 * @see Hypergraph#addEdge(Object, Collection)
-	 * @see #addEdge(Object, Object, Object, EdgeType)
 	 */
 	public boolean addEdge(E e, V v1, V v2) {
-		if(e == null || v1 == null || v2 == null || edgeAtCord.contains(e)){
-			throw new IllegalArgumentException("Edge is null or Edge already exist in the Graph");
-			//return false;
-		}
-		boolean isV1 = false;
-		boolean isV2 = false;
-		int v1Pos = 0;
-		int v2Pos = 0;
-		v1Pos = vertices.indexOf(v1);
-		v2Pos = vertices.indexOf(v2);
-		if(v1Pos != -1 && v2Pos != -1){
-			if(edge.get(v1Pos).get(v2Pos) != null){
-				//throw new IllegalArgumentException("An edge already connects v1 to v2");
-				return false;
-			}
-			edge.get(v1Pos).set(v2Pos,e);
-			edgeCord.add(new Integer[]{v1Pos,v2Pos});
-			edgeAtCord.add(e);
-			return true;
+		//return false;
+		assert e != null && v1 != null && v2 != null && !edgeC.contains(e) : "Edge is null or Edge already exist in the Graph";
+		int vFirst = verti.indexOf(v1);
+		int vSecond = verti.indexOf(v2);
 
+		if (vFirst == -1 || vSecond == -1) {
+			return false;
 		}
-		return false;
+		if(edge.get(vFirst).get(vSecond) != null){
+			return false;
+		}
+		edge.get(vFirst).set(vSecond,e);
+		edgeCord.add(new Integer[]{vFirst,vSecond});
+		edgeC.add(e);
+		return true;
+
 	}
 	
 	/**
@@ -294,43 +293,52 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 */
 	public boolean addVertex(V vertex) {
 		if(vertex == null){
-			throw new IllegalArgumentException("vertex can't be null");
+			throw new IllegalArgumentException("Illegal operation, null vertex was added to graph");
 		}
-		if(vertices.contains(vertex)){
+		if (!verti.contains(vertex)) {
+			expandGraph();
+			vertCount++;
+			verti.add(vertex);
+			return true;
+		} else {
 			return false;
 		}
-		expandMatrix();
-		numV++;
-		vertices.add(vertex);
-		return true;
 	}
 
-	//NOT STOCK
-	private void expandMatrix(){
-		int add = 0;
-		if(matrixSize == numV){
-			int newSize = matrixSize * 2;
-			for(int i = 0; i < matrixSize; i++){
-				add = 0;
-				while(add < matrixSize){
-					add++;
-					edge.get(i).add(null);
-				}
-			}
+	/**
+	 * Expand graph if number of vertices has exceeded initial sizeOfGraph.
+	 * See hashMap for more detail.
+	 */
+	private void expandGraph(){
+		int add;
+		if (sizeOfGraph != vertCount) {
+			return;
+		}
+		int doubleSize = sizeOfGraph * 2;
+		int i = 0;
+		while (i < sizeOfGraph) {
 			add = 0;
-			while(add < matrixSize){
+			while(add < sizeOfGraph){
+				add++;
+				edge.get(i).add(null);
+			}
+			i++;
+		}
+		add = 0;
+		if (add < sizeOfGraph) {
+			do {
 				add++;
 				int count = 0;
-				ArrayList<E> column = new ArrayList<E>();
-				while(count < newSize){
+				ArrayList<E> column = new ArrayList<>();
+				while (count < doubleSize) {
 					column.add(null);
 					count++;
 				}
 				edge.add(column);
-			}
-			matrixSize = newSize;
-
+			} while (add < sizeOfGraph);
 		}
+		sizeOfGraph = doubleSize;
+
 	}
 
 	/**
@@ -341,19 +349,20 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @return true if the removal is successful, false otherwise
 	 */
 	public boolean removeEdge(E edge) {
-		if(edge == null){
+		if(edge == null) return false;
+
+		int position = edgeC.indexOf(edge);
+
+		if (position == -1) {
 			return false;
 		}
-		int index = edgeAtCord.indexOf(edge);
-		if(index != -1){
-			int x = edgeCord.get(index)[0];
-			int y = edgeCord.get(index)[1];
-			this.edge.get(x).set(y,null);
-			edgeAtCord.remove(index);
-			edgeCord.remove(index);
-			return true;
-		}
-		return false;
+		int a = edgeCord.get(position)[0];
+		int b = edgeCord.get(position)[1];
+
+		this.edge.get(a).set(b,null);
+		edgeC.remove(position);
+		edgeCord.remove(position);
+		return true;
 	}
 	
 	/**
@@ -373,48 +382,50 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @return true if the removal is successful, false otherwise
 	 */
 	public boolean removeVertex(V vertex) {
-		if(vertex == null){
-			return false;
-		}
-		int index = vertices.indexOf(vertex);
-		if(index != -1){
-			vertices.remove(vertex);
-			numV--;
-			int oldSize = edgeCord.size();
-			int count = 0;
-			while(count < oldSize){
-				int x = edgeCord.get(count)[0];
-				int y = edgeCord.get(count)[1];
-				int xupdate = edgeCord.get(count)[0];
-				int yupdate = edgeCord.get(count)[1];
-				if(x < index && y < index){
-					count++;
-					continue;
-				}
-				if(x == index || y == index ){
-					if(edge.get(x).get(y).equals(edgeAtCord.get(count))){
-						edge.get(x).set(y,null);
+		if (vertex != null) {
+			int index = verti.indexOf(vertex);
+			if (index != -1) {
+				verti.remove(vertex);
+				vertCount--;
+				int originalSize = edgeCord.size();
+				int vertCount = 0;
+
+				while (vertCount < originalSize) {
+					int a;
+					int b;
+					a = edgeCord.get(vertCount)[0];
+					b = edgeCord.get(vertCount)[1];
+					int aChange = edgeCord.get(vertCount)[0];
+					int bChange = edgeCord.get(vertCount)[1];
+					if (a < index && b < index) {
+						vertCount++;
+						continue;
 					}
-					edgeCord.remove(count);
-					edgeAtCord.remove(count);
-					oldSize--;
-					continue;
+					if (a != index && b != index) {
+						if (a > index) {
+							aChange--;
+							edgeCord.get(vertCount)[0] = aChange;
+						}
+						if (b > index) {
+							bChange--;
+							edgeCord.get(vertCount)[1] = bChange;
+						}
+						if (edge.get(a).get(b).equals(edgeC.get(vertCount))) {
+							edge.get(a).set(b, null);
+						}
+						edge.get(aChange).set(bChange, edgeC.get(vertCount));
+						vertCount++;
+					} else {
+						if (edge.get(a).get(b).equals(edgeC.get(vertCount))) {
+							edge.get(a).set(b, null);
+						}
+						edgeCord.remove(vertCount);
+						edgeC.remove(vertCount);
+						originalSize--;
+					}
 				}
-				if(x > index){
-					xupdate--;
-					edgeCord.get(count)[0] = xupdate;
-				}
-				if(y > index){
-					yupdate--;
-					edgeCord.get(count)[1] = yupdate;
-				}
-				if(edge.get(x).get(y).equals(edgeAtCord.get(count))){
-					edge.get(x).set(y,null);
-				}
-				edge.get(xupdate).set(yupdate, edgeAtCord.get(count));
-				count++;
+				return true;
 			}
-			return true;
 		}
 		return false;
 	}
@@ -530,8 +541,8 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * are incident to each other.
 	 * Equivalent to getIncidentEdges(vertex).contains(edge) and to
 	 * getIncidentVertices(edge).contains(vertex).
-	 * @param vertex
-	 * @param edge
+	 * @param vertex vertex.
+	 * @param edge edge.
 	 * @return true if vertex and edge 
 	 * are incident to each other
 	 */
@@ -592,7 +603,6 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * 
 	 * @param vertex the vertex whose degree is to be returned
 	 * @return the degree of this node
-	 * @see Hypergraph#getNeighborCount(Object)
 	 */
 	public int degree(V vertex) {
 		return getIncidentEdges(vertex).size();
@@ -686,7 +696,6 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * 
 	 * @return  a collection containing all edges that connect v1 to v2, 
 	 * or null if either vertex is not present
-	 * @see Hypergraph#findEdge(Object, Object) 
 	 */
 	public Collection<E> findEdgeSet(V v1, V v2) {
 		E edge = findEdge(v1, v2);
@@ -738,8 +747,6 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * @param v2 the second vertex to be connected
 	 * @param edgeType the type to be assigned to the edge
 	 * @return true if the add is successful, false otherwise
-	 * @see Hypergraph#addEdge(Object, Collection)
-	 * @see #addEdge(Object, Object, Object)
 	 */
 	public boolean addEdge(E e, V v1, V v2, EdgeType edgeType) {
 		//NOTE: Only undirected edges allowed
@@ -761,9 +768,9 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * <li/>vertices are already connected by another edge in this graph,
 	 * and this graph does not accept parallel edges
 	 * </ul>
-	 * 
-	 * @param edge
-	 * @param vertices
+	 *
+	 * @param edge edge.
+	 * @param vertices vertices.
 	 * @return true if the add is successful, and false otherwise
 	 * @throws IllegalArgumentException if edge or vertices is null, 
 	 * or if a different vertex set in this graph is already connected by edge, 
@@ -790,9 +797,9 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * and this graph does not accept parallel edges
 	 * <li/>edge_type is not legal for this graph
 	 * </ul>
-	 * 
-	 * @param edge
-	 * @param vertices
+	 *
+	 * @param edge edge.
+	 * @param vertices vertices.
 	 * @return true if the add is successful, and false otherwise
 	 * @throws IllegalArgumentException if edge or vertices is null, 
 	 * or if a different vertex set in this graph is already connected by edge, 
@@ -854,7 +861,7 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * d is an outgoing edge.
 	 * directed_edge is guaranteed to be a directed edge if 
 	 * its EdgeType is DIRECTED. 
-	 * @param directed_edge
+	 * @param directed_edge direct.
 	 * @return  the source of directed_edge if it is a directed edge in this graph, or null otherwise
 	 */
 	public V getSource(E directed_edge) {
@@ -869,7 +876,7 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	 * d is an incoming edge.
 	 * directed_edge is guaranteed to be a directed edge if 
 	 * its EdgeType is DIRECTED. 
-	 * @param directed_edge
+	 * @param directed_edge edge.
 	 * @return  the destination of directed_edge if it is a directed edge in this graph, or null otherwise
 	 */
 	public V getDest(E directed_edge) {
@@ -968,7 +975,7 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	
 	/**
 	 * Returns the edge type of edge in this graph.
-	 * @param edge
+	 * @param edge edges.
 	 * @return the EdgeType of edge, or null if edge has no defined type
 	 */
 	public EdgeType getEdgeType(E edge) {
