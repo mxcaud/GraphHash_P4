@@ -329,12 +329,12 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 			do {
 				add++;
 				int count = 0;
-				ArrayList<E> column = new ArrayList<>();
+				ArrayList<E> verts = new ArrayList<>();
 				while (count < doubleSize) {
-					column.add(null);
+					verts.add(null);
 					count++;
 				}
-				edge.add(column);
+				edge.add(verts);
 			} while (add < sizeOfGraph);
 		}
 		sizeOfGraph = doubleSize;
