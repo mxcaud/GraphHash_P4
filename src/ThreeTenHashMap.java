@@ -10,6 +10,11 @@ import java.util.Collection; //for returning in the values() function only
 //uncomment the line below ONLY if you are implementing values().
 //import java.util.ArrayList; //for returning in the values() function only
 
+/**
+ * Class ThreeTenHashMap represents object key value pair elements with chaining.
+ * @param <K> key for an object.
+ * @param <V> value for an object.
+ */
 class ThreeTenHashMap<K,V> implements Map<K,V> {
 	//********************************************************************************
 	//   DO NOT EDIT ANYTHING IN THIS SECTION (except to add the JavaDocs)
@@ -52,7 +57,7 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 
 	public boolean isEmpty() {
 		//O(1)
-		return false;
+		return size()==0;
 	}
 
 	public int getSlots() {
@@ -136,10 +141,14 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		//Worst case: O(n) where n is the number
 		//of items in the list, NOT O(m) where m
 		//is the number of slots, and NOT O(n+m)
-
 		return null;
 	}
 
+	/**
+	 * Change floating point to an absolute value.
+	 * @param absNum number to pass and convert.
+	 * @return absolute converted value.
+	 */
 	private int absVal(int absNum){
 		int abs;
 		if (absNum < 0) abs = -absNum;
@@ -151,6 +160,11 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	// testing code goes here... edit this as much as you want!
 	//--------------------------------------------------------
 
+	/**
+	 * Tester class for ThreeTenHashMap.
+	 * Tests if values are being added properly and compare size.
+	 * @param args map.
+	 */
 	public static void main(String[] args) {
 		//main method for testing, edit as much as you want
 		ThreeTenHashMap<String,String> st1 = new ThreeTenHashMap<>(10);
@@ -212,30 +226,61 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	// (or grade) these methods.
 	//********************************************************************************
 
+	/**
+	 * Shows all values in the hashmap.
+	 * @return value colleciton.
+	 */
 	public Collection<V> values() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Put all the element pairs into the hashmap.
+	 * @param m unkown usage.
+	 */
 	public void	putAll(Map<? extends K,? extends V> m) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Check if value is contained in the hashmap.
+	 * @param value to check object.
+	 * @return boolean value true if value could be found.
+	 */
 	public boolean containsValue(Object value) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Unused, sets map entry to initial set in front.
+	 * @return stuff.
+	 */
 	public Set<Map.Entry<K,V>> entrySet() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Unused boolean check if object is equal to another.
+	 * @param o object to compare.
+	 * @return boolean true if objects are equal.
+	 */
 	public boolean equals(Object o) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Unused integer value of hash key.
+	 * @return the hash key.
+	 */
 	public int hashCode() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * Unused boolean for getting value of key.
+	 * @param key value.
+	 * @return value.
+	 */
 	public boolean containsKey(Object key) {
 		throw new UnsupportedOperationException();
 	}
@@ -245,40 +290,76 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	// We will check these things to make sure they still work, so don't break them.
 	//********************************************************************************
 
+	/**
+	 * Node class with object that has a key value pair. Including next node in list.
+	 * @param <K> key of object pair.
+	 * @param <V> value of object pair.
+	 */
 	//THIS CLASS IS PROVIDED, DO NOT CHANGE IT
 	public static class Node<K,V> {
 		public TableEntry<K,V> entry;
 		public Node<K,V> next;
 
+		/**
+		 * Setter entry to entry for Node.
+		 * @param entry value.
+		 */
 		public Node(TableEntry<K,V> entry) {
 			this.entry = entry;
 		}
 
+		/**
+		 * Nodes constructor.
+		 * @param entry object pair table.
+		 * @param next object pair Node next.
+		 */
 		public Node(TableEntry<K,V> entry, Node<K,V> next) {
 			this(entry);
 			this.next = next;
 		}
 
+		/**
+		 * Show object as a string value delimited by colon per object of Node.
+		 * @return string value of object.
+		 */
 		public String toString() {
 			return "[" + entry.toString() + "]->";
 		}
 	}
 
+	/**
+	 * A static class that has a table entry which contains a key value pair.
+	 * @param <K> key object.
+	 * @param <V> value object.
+	 */
 	//THIS CLASS IS PROVIDED, DO NOT CHANGE IT
 	public static class TableEntry<K,V> {
 		public K key;
 		public V value;
 
+		/**
+		 * Constructor for TableEntry.
+		 * @param key object.
+		 * @param value object.
+		 */
 		public TableEntry(K key, V value) {
 			this.key = key;
 			this.value = value;
 		}
 
+		/**
+		 * Show object as a string value delimited by colon per object.
+		 * @return string value of object.
+		 */
 		public String toString() {
 			return key.toString()+":"+value.toString();
 		}
 	}
 
+	/**
+	 * Convert table entry to array, iterating through table while element is not null.
+	 * @return collection of array elements.
+	 */
 	public TableEntry[] toArray(){
 		//THIS METHOD IS PROVIDED, DO NOT CHANGE IT
 
@@ -297,6 +378,10 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return collection;
 	}
 
+	/**
+	 * Prints everything inside of the hashtable without debug null verbose print.
+	 * @return elements inside the hashtable in use excluding debug features.
+	 */
 	public String toString() {
 		//THIS METHOD IS PROVIDED, DO NOT CHANGE IT
 
@@ -314,6 +399,10 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return s.toString().trim();
 	}
 
+	/**
+	 * Prints everything inside of the hashtable.
+	 * @return elements inside the hashtable in use.
+	 */
 	public String toStringDebug() {
 		//THIS METHOD IS PROVIDED, DO NOT CHANGE IT
 
@@ -331,6 +420,11 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return s.toString().trim();
 	}
 
+	/**
+	 * Rehash the hashtable to the provided size.
+	 * @param size of hashtable.
+	 * @return boolean value true.
+	 */
 	@SuppressWarnings("unchecked")
 	public boolean rehash(int size) {
 		//THIS METHOD IS PROVIDED, DO NOT CHANGE IT
@@ -351,6 +445,13 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return true;
 	}
 
+	/**
+	 * Place key value pair after assigning to put without expanding table.
+	 * When the number of elements exceeds to storage size increase by two.
+	 * @param key key value.
+	 * @param value value.
+	 * @return KV pair.
+	 */
 	public V put(K key, V value) {
 		//THIS METHOD IS PROVIDED, DO NOT CHANGE IT
 
