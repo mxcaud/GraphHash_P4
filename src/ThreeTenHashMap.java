@@ -20,20 +20,33 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	//   DO NOT EDIT ANYTHING IN THIS SECTION (except to add the JavaDocs)
 	//********************************************************************************
 
+	/**
+	 * For storing the KV pairs into Node storage.
+	 */
 	//you must use this storage for the hash table
 	//and you may not alter this variable's name, type, etc.
 	private Node<K,V>[] storage;
 
+	/**
+	 * Track the number of elements in the map. Used in put method and remove.
+	 */
 	//you must use to track the current number of elements
-	//and you may not alter this variable's name, type, etc.
+	//and you may not alter this variable's name, type, etc
 	private int numElements = 0;
 
 	//********************************************************************************
 	//   YOUR CODE GOES IN THIS SECTION
 	//********************************************************************************
 
+	/**
+	 * Original size of the table as defined by set method.
+	 */
 	private int originalSize;
 
+	/**
+	 * Make a hashTable with dimensions of the defined size parameter.
+	 * @param size number of slots.
+	 */
 	@SuppressWarnings("unchecked")
 	public ThreeTenHashMap(int size) {
 		//Create a hash table where the size of the storage is
@@ -48,6 +61,9 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		originalSize = size;
 	}
 
+	/**
+	 * Clear the storage.
+	 */
 	@SuppressWarnings("unchecked")
 	public void clear() {
 		//the table should return to the original size it had
@@ -55,23 +71,41 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		//O(1)
 	}
 
+	/**
+	 * Check if the number of elements is equal to zero.
+	 * @return boolean value of true if zero.
+	 */
 	public boolean isEmpty() {
 		//O(1)
 		return size()==0;
 	}
 
+	/**
+	 * Not really sure what a slot is.
+	 * But is defined by ThreeTen constructor above that passes a defined size as its parameter.
+	 * @return number of slots.
+	 */
 	public int getSlots() {
 		//return how many "slots" are in the table
 		//O(1)
-		return -1;
+		return originalSize;
 	}
 
+	/**
+	 * Size of map not to be confused with originalSize.
+	 * @return size as integer.
+	 */
 	public int size() {
 		//return the number of elements in the table
 		//O(1)
 		return numElements;
 	}
 
+	/**
+	 * Get object keys value.
+	 * @param key value.
+	 * @return object key value .
+	 */
 	public V get(Object key) {
 		//Given a key, return the value from the table.
 
@@ -82,6 +116,10 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return null;
 	}
 
+	/**
+	 * Return key set.
+	 * @return set of key.
+	 */
 	public Set<K> keySet() {
 		//O(n+m) or better, where n is the size and m is the
 		//number of slots
@@ -92,6 +130,13 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return null;
 	}
 
+	/**
+	 * Remove the given key and associated value.
+	 * from the table. Return the value removed.
+	 * If the value is not in the table, return null.
+	 * @param key object.
+	 * @return value to remove or null if DNE.
+	 */
 	public V remove(Object key) {
 		//Remove the given key (and associated value)
 		//from the table. Return the value removed.
@@ -105,6 +150,12 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		return null;
 	}
 
+	/**
+	 * Place V in location of K separated chaining is used.
+	 * @param key value.
+	 * @param value object.
+	 * @return value to put that matches add method.
+	 */
 	private V putNoExpand(K key, V value) {
 		//Place value v at the location of key k.
 		//Use separate chaining if that location is in use.
@@ -141,11 +192,22 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 		//Worst case: O(n) where n is the number
 		//of items in the list, NOT O(m) where m
 		//is the number of slots, and NOT O(n+m)
+		if (key == null) {
+			throw new IllegalArgumentException();
+		}
+		int index = absVal(key.hashCode())%storage.length;
+		Node<K,V>[] storage = new Node[index];
+		for(Node v : storage){
+			if(value.equals(key)){
+				return value;
+			}
+		}
 		return null;
 	}
 
+
 	/**
-	 * Change floating point to an absolute value.
+	 * Change to an absolute value.
 	 * @param absNum number to pass and convert.
 	 * @return absolute converted value.
 	 */
