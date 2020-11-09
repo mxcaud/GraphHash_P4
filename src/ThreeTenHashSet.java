@@ -14,8 +14,8 @@ import java.util.Iterator;
 //use inheritdoc).
 
 /**
- * @inheritDoc
- * @param <E>
+ * Whatever this.
+ * @param <E> as param.
  */
 class ThreeTenHashSet<E> implements Set<E> {
 	//********************************************************************************
@@ -46,6 +46,7 @@ class ThreeTenHashSet<E> implements Set<E> {
 	/**
 	 * Unused method, move everything into an Array.
 	 * @param a type.
+	 * @param <T> type.
 	 * @return none.
 	 */
 	public <T> T[] toArray(T[] a) {

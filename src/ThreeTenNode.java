@@ -48,10 +48,10 @@ class ThreeTenNode extends ThreeTenGraphComponent {
 			}
 		};
 	}
-	
+
 	/**
 	 *  Loads the node names from a file.
-	 *  @params filename the file containing the names to use
+	 *  @param filename the file containing the names to use
 	 */
 	public static void loadNames(String filename) {
 		ArrayList<String> fileContents = new ArrayList<>();

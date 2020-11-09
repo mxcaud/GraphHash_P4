@@ -51,10 +51,10 @@ public final class ThreeTenEdge extends ThreeTenGraphComponent {
 			}
 		};
 	}
-	
+
 	/**
 	 *  Loads the edge names from a file.
-	 *  @params filename the file containing the names to use
+	 *  @param filename the file containing the names to use.
 	 */
 	public static void loadNames(String filename) {
 		ArrayList<String> fileContents = new ArrayList<>();

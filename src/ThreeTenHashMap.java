@@ -359,7 +359,13 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	 */
 	//THIS CLASS IS PROVIDED, DO NOT CHANGE IT
 	public static class Node<K,V> {
+		/**
+		 * Entry of table.
+		 */
 		public TableEntry<K,V> entry;
+		/**
+		 * Entry of node.
+		 */
 		public Node<K,V> next;
 
 		/**
@@ -396,7 +402,13 @@ class ThreeTenHashMap<K,V> implements Map<K,V> {
 	 */
 	//THIS CLASS IS PROVIDED, DO NOT CHANGE IT
 	public static class TableEntry<K,V> {
+		/**
+		 * The key.
+		 */
 		public K key;
+		/**
+		 * The value.
+		 */
 		public V value;
 
 		/**
