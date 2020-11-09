@@ -33,12 +33,34 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	//         V[] items = (V[]) new Object[10];
 	//instead, use this format:
 	//         V[] items = (V[]) new ThreeTenGraphComponent[10];
+	/**
+	 * Array list of vertices.
+	 */
 	private ArrayList<V> verti;
+
+	/**
+	 * Array list that will contain edge nodes.
+	 */
 	private ArrayList<ArrayList<E>> edge;
+
+	/**
+	 * Array list that will contain chord across from nodes A to B.
+	 */
 	private ArrayList<Integer[]> edgeCord;
+
+	/**
+	 * Edges of cord at destination node.
+	 */
 	private ArrayList<E> edgeC;
 
+	/**
+	 * Begin vertex count at 0.
+	 */
 	private int vertCount = 0;
+
+	/**
+	 * Create a graph that will have size over zero.
+	 */
 	private int sizeOfGraph = 1; //can assume graphs will be >1
 
 
@@ -433,13 +455,21 @@ class ThreeTenGraph<V extends ThreeTenGraphComponent, E extends ThreeTenGraphCom
 	//--------------------------------------------------------
 	// testing code goes here... edit this as much as you want!
 	//--------------------------------------------------------
-	
+
+	/**
+	 * Conver to a string.
+	 * @return move to string.
+	 */
 	public String toString() {
 		//you may edit this to make string representations of your
 		//graph for testing
 		return super.toString();
 	}
-	
+
+	/**
+	 * Tester.
+	 * @param args test.
+	 */
 	public static void main(String[] args) {
 		//Some example testing code...
 		class Person extends ThreeTenGraphComponent {
